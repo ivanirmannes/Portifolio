@@ -1,102 +1,28 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.nav');
 
-    // ========================================
-    // 1. MENU MOBILE
-    // ========================================
-    const menuToggle = document.querySelector('.menu-toggle');
-    const nav = document.querySelector('.nav');
+  if (menuToggle && nav) {
+    const closeMenu = () => {
+      nav.classList.remove('active');
+      menuToggle.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', 'Abrir menu');
+    };
 
-        if (menuToggle && nav) {
-
-            menuToggle.addEventListener('click', function () {
-
-        const menuAberto = nav.classList.toggle('active');
-
-        menuToggle.classList.toggle('active');
-
-        menuToggle.setAttribute(
-            'aria-expanded',
-            menuAberto
-        );
-
-        menuToggle.setAttribute(
-            'aria-label',
-            menuAberto ? 'Fechar menu' : 'Abrir menu'
-        );
-
+    menuToggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('active');
+      menuToggle.classList.toggle('active', isOpen);
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
     });
 
-}
-
-    const navLinks = document.querySelectorAll('.nav a');
-
-navLinks.forEach(function (link) {
-
-    link.addEventListener('click', function () {
-
-        nav.classList.remove('active');
-        menuToggle.classList.remove('active');
-
-        menuToggle.setAttribute(
-            'aria-expanded',
-            'false'
-        );
-
-        menuToggle.setAttribute(
-            'aria-label',
-            'Abrir menu'
-        );
-
+    nav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeMenu();
     });
+  }
 
-});
-
-
-    // ========================================
-    // 2. ANIMAÇÃO SUAVE AO ENTRAR NAS SEÇÕES
-    // ========================================
-
-    const sections = document.querySelectorAll('section');
-
-    const observer = new IntersectionObserver(
-        function (entries) {
-
-            entries.forEach(function (entry) {
-
-                if (entry.isIntersecting) {
-
-                    entry.target.classList.add('visible');
-
-                }
-
-            });
-
-        },
-        {
-            threshold: 0.15
-        }
-    );
-
-    sections.forEach(function (section) {
-
-        observer.observe(section);
-
-    });
-
-
-    // ========================================
-    // 3. ANO AUTOMÁTICO DO FOOTER
-    // ========================================
-
-    const footerText = document.querySelector('.footer p');
-
-    if (footerText) {
-
-        const currentYear = new Date().getFullYear();
-
-        footerText.textContent =
-            `© ${currentYear} Ivanir Mannes. Todos os direitos reservados.`;
-
-    }
-
+  const year = document.querySelector('#current-year');
+  if (year) year.textContent = new Date().getFullYear();
 });
